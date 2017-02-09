@@ -6,18 +6,20 @@
     [taoensso.timbre :refer-macros [debug]]
     [status-im.protocol.validation :refer-macros [valid?]]
     [status-im.protocol.web3.filtering :as f]
-    [status-im.protocol.listeners :as l]))
+    [status-im.protocol.listeners :as l]
+    [clojure.string :as str]))
 
 (defn prepare-mesage
-  [{:keys [message group-id keypair new-keypair type]}]
-  (let [message'  (-> message
-                      (update :payload assoc
-                              :group-id group-id
-                              :type type
-                              :timestamp (u/timestamp))
-                      (assoc :topics [group-id]
-                             :requires-ack? true
-                             :type type))]
+  [{:keys [message group-id keypair new-keypair type username]}]
+  (let [message' (-> message
+                     (update :payload assoc
+                             :username username
+                             :group-id group-id
+                             :type type
+                             :timestamp (u/timestamp))
+                     (assoc :topics [group-id]
+                            :requires-ack? true
+                            :type type))]
     (cond-> message'
             keypair (assoc :keypair keypair)
             new-keypair (assoc :new-keypair keypair))))
@@ -33,6 +35,10 @@
 (s/def :group/message
   (s/merge :protocol/message (s/keys :req-un [:chat-message/payload])))
 
+(s/def :public-group/username (s/and string? (complement str/blank?)))
+(s/def :public-group/message
+  (s/merge :group/message (s/keys :username :public-group/username)))
+
 (defn send!
   [{:keys [keypair message] :as options}]
   {:pre [(valid? :message/keypair keypair)
@@ -41,7 +47,7 @@
 
 (defn send-to-public-group!
   [{:keys [message] :as options}]
-  {:pre [(valid? :group/message message)]}
+  {:pre [(valid? :public-group/message message)]}
   (send-group-message! options :public-group-message))
 
 (defn leave!

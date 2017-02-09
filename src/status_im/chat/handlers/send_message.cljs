@@ -262,7 +262,7 @@
 
 (register-handler ::send-message!
   (u/side-effect!
-    (fn [{:keys [web3 chats network-status]
+    (fn [{:keys [web3 chats network-status current-account-id accounts]
           :as   db} [_ {{:keys [message-type]
                          :as   message} :message
                         chat-id         :chat-id}]]
@@ -287,7 +287,10 @@
                                                             :private private-key})))
 
                 (= message-type :public-group-user-message)
-                (protocol/send-public-group-message! (assoc options :group-id chat-id))
+                (protocol/send-public-group-message!
+                  (let [username (get-in accounts [current-account-id :name])]
+                    (assoc options :group-id chat-id
+                                   :username username)))
 
                 :else
                 (protocol/send-message! (assoc-in options
@@ -295,12 +298,13 @@
 
 (register-handler ::send-command-protocol!
   (u/side-effect!
-    (fn [{:keys [web3 current-public-key chats network-status] :as db}
-         [_ {:keys [chat-id command command-message]}]]
+    (fn [{:keys [web3 current-public-key chats network-status
+                 current-account-id accounts] :as db}
+         [_ {:keys [chat-id command]}]]
       (log/debug "sending command: " command)
       (when (cu/not-console? chat-id)
         (let [{:keys [public-key private-key]} (chats chat-id)
-              {:keys [group-chat]} (get-in db [:chats chat-id])
+              {:keys [group-chat public?]} (get-in db [:chats chat-id])
 
               payload (-> command
                           (select-keys [:content :content-type
@@ -313,10 +317,19 @@
                        :message {:from       current-public-key
                                  :message-id (:message-id command)
                                  :payload    payload}}]
-          (if group-chat
+          (cond
+            (and group-chat (not public?))
             (protocol/send-group-message! (assoc options
                                             :group-id chat-id
                                             :keypair {:public  public-key
                                                       :private private-key}))
+
+            (and group-chat not)
+            (protocol/send-public-group-message!
+              (let [username (get-in accounts [current-account-id :name])]
+                (assoc options :group-id chat-id
+                               :username username)))
+
+            :else
             (protocol/send-message! (assoc-in options
                                               [:message :to] chat-id))))))))
