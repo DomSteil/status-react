@@ -1,4 +1,4 @@
-(ns status-im.new-public-group.screen
+(ns status-im.new-group.screen-public
   (:require-macros [status-im.utils.views :refer [defview]])
   (:require [re-frame.core :refer [subscribe dispatch]]
             [status-im.resources :as res]
@@ -23,7 +23,7 @@
 
 (defview new-group-toolbar []
   [topic [:get ::topic]]
-  (let [create-btn-enabled? (s/valid? ::v/name topic)]
+  (let [create-btn-enabled? (s/valid? ::v/topic topic)]
     [view
      [status-bar]
      [toolbar
@@ -37,17 +37,21 @@
   [topic [:get ::topic]]
   [view
    [text-field
-    {:error          (cond
-                       (not (s/valid? ::v/not-empty-string topic))
-                       (label :t/empty-topic))
-     :wrapper-style  st/group-chat-name-wrapper
-     :error-color    color-blue
-     :line-color     separator-color
-     :label-hidden?  true
-     :input-style    st/group-chat-name-input
-     :auto-focus     true
-     :on-change-text #(dispatch [:set ::topic %])
-     :value          topic}]])
+    {:error           (cond
+                        (not (s/valid? ::v/not-empty-string topic))
+                        (label :t/empty-topic)
+
+                        (not (s/valid? ::v/topic topic))
+                        (label :t/topic-format))
+     :wrapper-style   st/group-chat-name-wrapper
+     :error-color     color-blue
+     :line-color      separator-color
+     :label-hidden?   true
+     :input-style     st/group-chat-name-input
+     :auto-focus      true
+     :on-change-text  #(dispatch [:set ::topic %])
+     :value           topic
+     :auto-capitalize :none}]])
 
 (defn new-public-group []
   [view st/new-group-container

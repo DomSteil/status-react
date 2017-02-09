@@ -56,6 +56,12 @@
      :buttonColor :#1abc9c
      :onPress     #(dispatch [:navigate-to :new-group])}
     [ion-icon {:name  :md-person
+               :style st/person-stalker-icon}]]
+   [action-button-item
+    {:title       (label :t/new-public-group-chat)
+     :buttonColor :#1abc9c
+     :onPress     #(dispatch [:navigate-to :new-public-group])}
+    [ion-icon {:name  :md-person
                :style st/person-stalker-icon}]]])
 
 (defn chat-shadow-item []

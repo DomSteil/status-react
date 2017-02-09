@@ -37,6 +37,10 @@
           group)))
     (realm/realm-collection->list (groups true))))
 
+(defn- get-by-id-obj
+  [chat-id]
+  (realm/get-one-by-field @realm/account-realm :chat :chat-id chat-id))
+
 (defn get-by-id
   [chat-id]
   (-> @realm/account-realm
@@ -53,12 +57,12 @@
 
 (defn delete
   [chat-id]
-  (when-let [chat (get-by-id chat-id)]
+  (when-let [chat (get-by-id-obj chat-id)]
     (realm/write @realm/account-realm
                  (fn []
                    (doto chat
                      (aset "is-active" false)
-                     (aset "removed-at" timestamp))))))
+                     (aset "removed-at" (timestamp)))))))
 
 (defn get-contacts
   [chat-id]
