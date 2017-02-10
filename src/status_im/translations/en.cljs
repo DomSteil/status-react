@@ -122,6 +122,7 @@
    :new-group-chat                        "New group chat"
    :new-public-group-chat                 "Join public group chat"
    :empty-topic                           "Empty topic"
+   :topic-format                          "Wrong format [a-z0-9\\-]+"
    :public-group-topic                    "Topic"
 
    ;discover

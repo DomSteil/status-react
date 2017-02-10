@@ -27,8 +27,8 @@
     [view st/contact-container
      [view st/option-inner-container
       [view st/option-inner
-       [image {:source {:uri :icon_menu_group}
-               :style  st/option-inner-image}]]
+       [image {:source {:uri :icon_private_group_big}
+               :style  st/group-icon}]]
       [view st/info-container
        [text {:style st/name-text}
         (label :t/new-group-chat)]]]]]
@@ -38,7 +38,7 @@
      [view st/option-inner-container
       [view st/option-inner
        [image {:source {:uri :icon_public_group_big}
-               :style  st/public-group-icon}]]
+               :style  st/group-icon}]]
       [view st/info-container
        [text {:style st/name-text}
         (label :t/new-public-group-chat)]]]]]])

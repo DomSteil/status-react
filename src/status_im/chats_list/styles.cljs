@@ -141,7 +141,7 @@
    :height   22
    :color    color-white})
 
-(def person-stalker-icon
-  {:fontSize 20
-   :height   22
-   :color    color-white})
+(def group-icon
+  {:height     22
+   :width      22
+   :tint-color :white})

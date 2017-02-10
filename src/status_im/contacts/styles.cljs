@@ -132,7 +132,7 @@
    :top 16
    :left 13})
 
-(def public-group-icon
+(def group-icon
   (assoc option-inner-image
     :tint-color color-gray))
 

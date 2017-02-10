@@ -8,7 +8,8 @@
             [status-im.utils.handlers :as u]
             [status-im.utils.random :as random]
             [taoensso.timbre :refer-macros [debug]]
-            [taoensso.timbre :as log]))
+            [taoensso.timbre :as log]
+            [status-im.navigation.handlers :as nav]))
 
 (defn deselect-contact
   [db [_ id]]
@@ -160,3 +161,7 @@
                :identity current-public-key
                :keypair  keypair
                :callback #(dispatch [:incoming-message %1 %2])})))))))
+
+(defmethod nav/preload-data! :new-public-group
+  [db]
+  (dissoc db :public-group/topic))

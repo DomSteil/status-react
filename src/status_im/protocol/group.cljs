@@ -10,7 +10,7 @@
     [clojure.string :as str]))
 
 (defn prepare-mesage
-  [{:keys [message group-id keypair new-keypair type username]}]
+  [{:keys [message group-id keypair new-keypair type username requires-ack?]}]
   (let [message' (-> message
                      (update :payload assoc
                              :username username
@@ -18,7 +18,9 @@
                              :type type
                              :timestamp (u/timestamp))
                      (assoc :topics [group-id]
-                            :requires-ack? true
+                            :requires-ack? (if (nil? requires-ack?)
+                                             true
+                                             requires-ack?)
                             :type type))]
     (cond-> message'
             keypair (assoc :keypair keypair)
@@ -48,7 +50,8 @@
 (defn send-to-public-group!
   [{:keys [message] :as options}]
   {:pre [(valid? :public-group/message message)]}
-  (send-group-message! options :public-group-message))
+  (send-group-message! (assoc options :requires-ack? false)
+                       :public-group-message))
 
 (defn leave!
   [options]

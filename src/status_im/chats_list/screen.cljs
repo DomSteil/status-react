@@ -56,12 +56,12 @@
     {:title       (label :t/new-group-chat)
      :buttonColor :#1abc9c
      :onPress     #(dispatch [:navigate-to :new-group])}
-    [icon :private_group_big {:height 22 :width 22 :tint-color :white}]]
+    [icon :private_group_big st/group-icon]]
    [action-button-item
     {:title       (label :t/new-public-group-chat)
      :buttonColor :#1abc9c
      :onPress     #(dispatch [:navigate-to :new-public-group])}
-    [icon :public_group_big {:height 22 :width 22 :tint-color :white}]]])
+    [icon :public_group_big st/group-icon]]])
 
 (defn chat-shadow-item []
   [view {:height 3}

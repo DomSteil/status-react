@@ -22,7 +22,7 @@
             [cljs.spec :as s]))
 
 (defview new-group-toolbar []
-  [topic [:get ::topic]]
+  [topic [:get :public-group/topic]]
   (let [create-btn-enabled? (s/valid? ::v/topic topic)]
     [view
      [status-bar]
@@ -34,7 +34,7 @@
                              #(dispatch [:create-new-public-group topic]))}]}]]))
 
 (defview group-name-input []
-  [topic [:get ::topic]]
+  [topic [:get :public-group/topic]]
   [view
    [text-field
     {:error           (cond
@@ -49,7 +49,7 @@
      :label-hidden?   true
      :input-style     st/group-chat-name-input
      :auto-focus      true
-     :on-change-text  #(dispatch [:set ::topic %])
+     :on-change-text  #(dispatch [:set :public-group/topic %])
      :value           topic
      :auto-capitalize :none}]])
 

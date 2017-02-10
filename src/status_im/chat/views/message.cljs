@@ -143,9 +143,9 @@
                        :current-chat-id current-chat-id}]]))
 
 (defn message-view
-  [{:keys [username same-author] :as message} content]
+  [{:keys [username same-author index] :as message} content]
   [view (st/message-view message)
-   (when (and username (not same-author))
+   (when (and username (or (= 1 index) (not same-author)))
      [text {:style st/author} username])
    content])
 
@@ -373,10 +373,10 @@
                   children)])}))
     (into [view] children)))
 
-(defn chat-message [{:keys [outgoing message-id chat-id user-statuses from content] :as message}]
-  (let [my-identity (subscribe [:get :current-public-key])
-        status      (subscribe [:get-in [:message-data :user-statuses message-id my-identity]])
-        preview     (subscribe [:get-in [:message-data :preview message-id]])]
+(defn chat-message [{:keys [outgoing message-id chat-id user-statuses from] :as message}]
+  (let [my-identity  (subscribe [:get :current-public-key])
+        status       (subscribe [:get-in [:message-data :user-statuses message-id my-identity]])
+        preview      (subscribe [:get-in [:message-data :preview message-id]])]
     (r/create-class
       {:component-will-mount
        (fn []
