@@ -6,6 +6,7 @@
                                                 view
                                                 animated-view
                                                 text
+                                                icon
                                                 image
                                                 touchable-highlight]]
             [status-im.components.action-button :refer [action-button
@@ -55,14 +56,12 @@
     {:title       (label :t/new-group-chat)
      :buttonColor :#1abc9c
      :onPress     #(dispatch [:navigate-to :new-group])}
-    [ion-icon {:name  :md-person
-               :style st/person-stalker-icon}]]
+    [icon :private_group_big {:height 22 :width 22 :tint-color :white}]]
    [action-button-item
     {:title       (label :t/new-public-group-chat)
      :buttonColor :#1abc9c
      :onPress     #(dispatch [:navigate-to :new-public-group])}
-    [ion-icon {:name  :md-person
-               :style st/person-stalker-icon}]]])
+    [icon :public_group_big {:height 22 :width 22 :tint-color :white}]]])
 
 (defn chat-shadow-item []
   [view {:height 3}

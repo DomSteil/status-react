@@ -37,8 +37,8 @@
     [view st/contact-container
      [view st/option-inner-container
       [view st/option-inner
-       [image {:source {:uri :icon_menu_group}
-               :style  st/option-inner-image}]]
+       [image {:source {:uri :icon_public_group_big}
+               :style  st/public-group-icon}]]
       [view st/info-container
        [text {:style st/name-text}
         (label :t/new-public-group-chat)]]]]]])
@@ -46,10 +46,10 @@
 (defn render-row [chat-modal click-handler action params]
   (fn [row _ _]
     (list-item
-     [contact-view {:contact  row
-                    :letter?  chat-modal
-                    :on-click (if click-handler
-                                #(click-handler row action params))}])))
+      [contact-view {:contact  row
+                     :letter?  chat-modal
+                     :on-click (if click-handler
+                                 #(click-handler row action params))}])))
 
 (defn contact-list-entry [{:keys [click-handler icon icon-style label]}]
   [touchable-highlight
